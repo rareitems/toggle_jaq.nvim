@@ -25,17 +25,17 @@
 ---What command is going to be run can be checked via ':JaqPrint'.
 ---
 ---Your commands can contain variables which will be replaced when you run them.
----<
+--->
 ---  % / $file : Current File
 ---  # / $altFile : Alternate File
 ---  $dir : Current Working Directory
 ---  $filePath : Path to Current File
 ---  $fileBase : Basename of File (no extension)
---->
----Example:
 ---<
----  "lua %"
+---Example:
 --->
+---  "lua %"
+---<
 ---Will run "lua" with the name of your current file.
 ---
 ---Not only you can set commands but also filetype to which terminal window
@@ -54,26 +54,28 @@
 ---@brief ]]
 
 ---@mod toggle_jaq.Config
+---@brief [[
 ---Can be setup with |toggle_jaq.setup|
 ---
 ---Default values:
 --->
----{
----  direction = "vertical",
----  hide_numbers = true,
----  size = 50,
----  filetypes = {
----    lua = { cmd = "lua %" },
----    sml = { cmd = "rlwrap sml %", filetype = "sml" },
----    javascript = { cmd = "node %" },
----    typescript = { cmd = "ts-node %" },
----  },
----  create_commands = true,
----  auto_resize = false,
----  dynamic_size = nil,
----  highlight_background = nil,
----}
+---  {
+---    direction = "vertical",
+---    hide_numbers = true,
+---    size = 50,
+---    filetypes = {
+---      lua = { cmd = "lua %" },
+---      sml = { cmd = "rlwrap sml %", filetype = "sml" },
+---      javascript = { cmd = "node %" },
+---      typescript = { cmd = "ts-node %" },
+---    },
+---    create_commands = true,
+---    auto_resize = false,
+---    dynamic_size = nil,
+---    highlight_background = nil,
+---  }
 ---<
+---@brief ]]
 
 ---@class Config
 ---@field filetypes table Table of filetypes as keys and table with specified command to run and filetype to set
