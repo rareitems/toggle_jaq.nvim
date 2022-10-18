@@ -1,0 +1,165 @@
+================================================================================
+                                                                    *toggle_jaq*
+
+Just another quickrun plugin this time in a togglable window.
+
+================================================================================
+                                                              *toggle_jaq.Usage*
+
+Set your keymaps for example
+>
+  local opts = { noremap = true, silent = true }
+  vim.keymap.set("n", "<leader>r", t.rerun_show, opts)
+  vim.keymap.set("n", "<M-r>", t.toggle, opts)
+  vim.keymap.set("t", "<M-r>", t.toggle, opts)
+<
+
+Specify command to run and filetype to set in command line or in your config
+>
+  :lua vim.g.toggle_jaq = {cmd = "lua %"}
+<
+
+Your cmds can be set in various scopes. In sppecific buffer ('vim.b'), or globally ('vim.g') context.
+Buffer variable will be checked first, then global and last 'filetype' subtable from the configuration
+will be checked if it contains a key with current buffer's filetype.
+
+What command is going to be run can be checked via ':JaqPrint'.
+
+Your commands can contain variables which will be replaced when you run them.
+<
+  % / $file : Current File
+  # / $altFile : Alternate File
+  $dir : Current Working Directory
+  $filePath : Path to Current File
+  $fileBase : Basename of File (no extension)
+>
+Example:
+<
+  "lua %"
+>
+Will run "lua" with the name of your current file.
+
+Not only you can set commands but also filetype to which terminal window
+is going to be set to. This is useful to get a syntax highlighting inside REPL.
+Example:
+>
+  :lua vim.g.toggle_jaq = {cmd = "lua %", ft = "lua"}
+<
+
+There are following nvim commands
+:JaqGSetCmd <cmd> - Sets <cmd> in global vim variable, |vim.g|
+:JaqGSetFt <ft>   - Sets <ft> in global vim variable, |vim.g|
+:JaqBSetCmd <cmd> - Sets <cmd> in buffer vim variable, |vim.b|
+:JaqBSetFt <ft>   - Sets <ft> in buffer vim variable, |vim.b|
+:JaqPrint         - Prints a table of what filetype would be set and command would be run if you tried running terminal in the current buffer
+
+================================================================================
+                                                             *toggle_jaq.Config*
+
+Config                                                *toggle_jaq.Config.Config*
+    Can be setup with |toggle_jaq.setup|
+
+    Default values:
+    >
+    {
+      direction = "vertical",
+      hide_numbers = true,
+      size = 50,
+      filetypes = {
+        lua = { cmd = "lua %" },
+        sml = { cmd = "rlwrap sml %", filetype = "sml" },
+        javascript = { cmd = "node %" },
+        typescript = { cmd = "ts-node %" },
+      },
+      create_commands = true,
+      auto_resize = false,
+      dynamic_size = nil,
+      highlight_background = nil,
+    }
+    <
+
+    Fields: ~
+        {filetypes}             (table)              Table of filetypes as keys and table with specified command to run and filetype to set
+        {hide_numbers}          (boolean)            Turns off `number` and `relativenumber` in the terminal window
+        {direction}             (Direction)          see |Direction|
+        {size}                  (number)             Size for the terminal window
+        {auto_resize}           (boolean)            Should 'wincmd =' be called after creating the window
+        {dynamic_size}          (DynamicSizeConfig)  | nil see |DynamicSizeConfig|, this option will cause to ignore 'size'
+        {highlight_background}  (string)             | nil Highlight for the terminal background
+
+
+DynamicSizeConfig                          *toggle_jaq.Config.DynamicSizeConfig*
+    Allows terminal to be of dynamic size that is based on on the size current window ('current_window') or number of all columns ('all_columns'), scaled by {value}
+
+    Fields: ~
+        {based_on}  ('current_window')  | 'all_columns'
+        {value}     (number)
+
+
+Direction                                          *toggle_jaq.Config.Direction*
+    Direction in which terminal window is going to be created
+
+    Variants: ~
+        ("vertical")    Corresponds to |vsplit|
+        ("horizontal")  Corresponds to |split|
+
+
+toggle_jaq.setup({config})                                    *toggle_jaq.setup*
+    Setups up toggle_jaq with the provided {config}
+
+    Parameters: ~
+        {config}  (Config)
+
+    See: ~
+        |Config|
+
+
+toggle_jaq.show()                                              *toggle_jaq.show*
+    Shows the terminal window
+
+
+toggle_jaq.hide()                                              *toggle_jaq.hide*
+    Hides the terminal window
+
+
+toggle_jaq.toggle()                                          *toggle_jaq.toggle*
+    Toggles the terminal, starting it if necessary
+
+
+toggle_jaq.rerun_in_bg()                                *toggle_jaq.rerun_in_bg*
+    Tries to rerun the command in the background
+    Returns true if it succeeded else false
+
+    Returns: ~
+        {boolean}
+
+
+toggle_jaq.rerun_enter()                                *toggle_jaq.rerun_enter*
+    Reruns the command, shows the terminal and enters insert mode inside terminal window
+    Returns true if it succeeded else false
+
+    Returns: ~
+        {boolean}
+
+
+toggle_jaq.rerun_show()                                  *toggle_jaq.rerun_show*
+    Reruns the command, shows the terminal, this will break last opened window ('wincmd p')
+    Returns true if it succeeded else false
+
+    Returns: ~
+        {boolean}
+
+
+toggle_jaq.get()                                                *toggle_jaq.get*
+    Returns a table of what filetype would be set and command would be run if you tried running toggle_jaq in current buffer
+
+
+toggle_jaq.set({context}, {set})                                *toggle_jaq.set*
+    Sets the table, {to_set} which contains command and filetype for a given {context}
+
+    Parameters: ~
+        {context}  (string)  Context in which to set the table, can be 'b' or 'buffer' for 'vim.b', or 'g' or 'global' for global
+        {set}      (table)   Table with 'cmd' and 'filetype' subtables
+
+
+vim:tw=78:ts=8:noet:ft=help:norl:
