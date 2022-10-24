@@ -69,6 +69,7 @@ Default values:
       sml = { cmd = "rlwrap sml %", filetype = "sml" },
       javascript = { cmd = "node %" },
       typescript = { cmd = "ts-node %" },
+      rust = { cmd = "cargo run" },
     },
     create_commands = true,
     auto_resize = false,
@@ -80,20 +81,20 @@ Default values:
 Config                                                *toggle_jaq.Config.Config*
 
     Fields: ~
-        {filetypes}             (table)              Table of filetypes as keys and table with specified command to run and filetype to set
-        {hide_numbers}          (boolean)            Turns off `number` and `relativenumber` in the terminal window
-        {direction}             (Direction)          see |Direction|
-        {size}                  (number)             Size for the terminal window
-        {auto_resize}           (boolean)            Should 'wincmd =' be called after creating the window
-        {dynamic_size}          (DynamicSizeConfig)  | nil see |DynamicSizeConfig|, this option will cause to ignore 'size'
-        {highlight_background}  (string)             | nil Highlight for the terminal background
+        {filetypes}             (table)                  Table of filetypes as keys and table with specified command to run and filetype to set
+        {hide_numbers}          (boolean)                Turns off `number` and `relativenumber` in the terminal window
+        {direction}             (Direction)              see |Direction|
+        {size}                  (number)                 Size for the terminal window
+        {auto_resize}           (boolean)                Should 'wincmd =' be called after creating the window
+        {dynamic_size}          (DynamicSizeConfig|nil)  see |DynamicSizeConfig|, this option will cause to ignore 'size'
+        {highlight_background}  (string|nil)             Highlight for the terminal background
 
 
 DynamicSizeConfig                          *toggle_jaq.Config.DynamicSizeConfig*
     Allows terminal to be of dynamic size that is based on on the size current window ('current_window') or number of all columns ('all_columns'), scaled by {value}
 
     Fields: ~
-        {based_on}  ('current_window')  | 'all_columns'
+        {based_on}  (current_window|all_columns)
         {value}     (number)
 
 
@@ -123,8 +124,14 @@ toggle_jaq.hide()                                              *toggle_jaq.hide*
     Hides the terminal window
 
 
-toggle_jaq.toggle()                                          *toggle_jaq.toggle*
+toggle_jaq.toggle_enter()                              *toggle_jaq.toggle_enter*
     Toggles the terminal, starting it if necessary
+    If terminal is showed, enter insert mode inside of it.
+
+
+toggle_jaq.toggle_show()                                *toggle_jaq.toggle_show*
+    Toggles the terminal, starting it if necessary
+    This will break last opened window ('wincmd p')
 
 
 toggle_jaq.rerun_in_bg()                                *toggle_jaq.rerun_in_bg*

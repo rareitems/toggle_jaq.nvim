@@ -423,7 +423,8 @@ toggle_jaq.hide = function()
 end
 
 ---Toggles the terminal, starting it if necessary
-toggle_jaq.toggle = function()
+---If terminal is showed, enter insert mode inside of it.
+toggle_jaq.toggle_enter = function()
   if Window:is_hidden() then
     if not Buffer:is_exist() then
       if not Buffer:new() then
@@ -432,6 +433,22 @@ toggle_jaq.toggle = function()
     end
     Window:show(Buffer)
     vim.cmd.startinsert()
+  else
+    Window:close()
+  end
+end
+
+---Toggles the terminal, starting it if necessary
+---This will break last opened window ('wincmd p')
+toggle_jaq.toggle_show = function()
+  if Window:is_hidden() then
+    if not Buffer:is_exist() then
+      if not Buffer:new() then
+        return
+      end
+    end
+    Window:show(Buffer)
+    vim.cmd.wincmd("p")
   else
     Window:close()
   end
