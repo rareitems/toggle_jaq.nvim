@@ -17,6 +17,9 @@
 --->
 ---  :lua vim.g.toggle_jaq = {cmd = "lua %"}
 ---<
+---Command can also be set to {cmd = 'internal', args = { -- some arguments see *toggle_jaq.variable* }}
+---If no `args` is `nil`, `%` (current file) will be used.
+---then instead of running terminal, 'luafile' will be used and its output will be showed in a a buffer.
 ---
 ---Your cmds can be set in various scopes. In sppecific buffer ('vim.b'), or globally ('vim.g') context.
 ---Buffer variable will be checked first, then global and last 'filetype' subtable from the configuration
@@ -105,7 +108,12 @@
 ---@alias BuffNr number | nil
 
 ---@private
----@alias Cmd string | nil
+---@class Internal table
+---@field cmd "internal"
+---@field args table
+
+---@private
+---@alias Cmd Internal | string | nil
 
 ---Config
 ---@type Config
@@ -319,8 +327,6 @@ function Buffer:new()
     return false
   end
 
-  local cmd = transform_cmd(result.cmd)
-
   local bufnr = vim.api.nvim_create_buf(false, false)
   if bufnr == 0 then
     vim.notify("toggle_jaq: Could not create a buffer", vim.log.levels.ERROR)
@@ -329,13 +335,30 @@ function Buffer:new()
     self.bufnr = bufnr
   end
 
-  vim.api.nvim_buf_call(self.bufnr, function()
-    spawn_term(cmd)
-  end)
+  if result.cmd == "internal" then
+    local args
+    if result.cmd.args then
+      args = transform_cmd(result.cmd.args)
+    else
+      args = "%"
+    end
+    local output = vim.api.nvim_cmd({ cmd = "luafile", args = { args } }, { output = true })
+    local output_table = {}
+    for s in output:gmatch("[^\r\n]+") do
+      table.insert(output_table, s)
+    end
+    vim.api.nvim_buf_set_lines(self.bufnr, 0, -1, false, output_table)
+  else
+    local cmd = transform_cmd(result.cmd)
+    vim.api.nvim_buf_call(self.bufnr, function()
+      spawn_term(cmd)
+    end)
 
-  if result.ft ~= nil then
-    vim.bo[self.bufnr].filetype = result.ft
+    if result.ft ~= nil then
+      vim.bo[self.bufnr].filetype = result.ft
+    end
   end
+
   return true
 end
 
