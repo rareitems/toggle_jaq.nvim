@@ -86,6 +86,7 @@
 ---@field auto_resize boolean Should 'wincmd =' be called after creating the window
 ---@field dynamic_size DynamicSizeConfig | nil see |DynamicSizeConfig|, this option will cause to ignore 'size'
 ---@field highlight_background string | nil Highlight for the terminal background
+---@field create_commands boolean
 
 ---Allows terminal to be of dynamic size that is based on on the size current window ('current_window') or number of all columns ('all_columns'), scaled by {value}
 ---@class DynamicSizeConfig
@@ -232,6 +233,7 @@ function Window:create()
 
   if Config.hide_numbers then
     vim.wo[self.winid].number = false
+    vim.wo[self.winid].signcolumn = "no"
     vim.wo[self.winid].relativenumber = false
   end
 
