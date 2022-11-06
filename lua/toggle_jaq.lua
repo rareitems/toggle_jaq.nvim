@@ -3,7 +3,19 @@
 ---Just another pluging that allows to quickly run commands and show their results. This time in a togglable terminal window.
 ---@brief ]]
 
----@mod toggle_jaq.Usage
+---@mod toggle_jaq.Variables Variables
+---@brief [[
+---Your commands can contain variables which will be replaced when you run them.
+--->
+---  % / $file : Current File
+---  # / $altFile : Alternate File
+---  $dir : Current Working Directory
+---  $filePath : Path to Current File
+---  $fileBase : Basename of File (no extension)
+---<
+---@brief ]]
+
+---@mod toggle_jaq.Usage Usage
 ---@brief [[
 ---Set your keymaps for example
 --->
@@ -56,7 +68,7 @@
 ---:JaqPrint         - Prints a table of what filetype would be set and command would be run if you tried running terminal in the current buffer
 ---@brief ]]
 
----@mod toggle_jaq.Config
+---@mod toggle_jaq.Config Config
 ---@brief [[
 ---Can be setup with |toggle_jaq.setup|
 ---

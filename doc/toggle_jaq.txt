@@ -4,7 +4,19 @@
 Just another pluging that allows to quickly run commands and show their results. This time in a togglable terminal window.
 
 ================================================================================
-                                                              *toggle_jaq.Usage*
+Variables                                                 *toggle_jaq.Variables*
+
+Your commands can contain variables which will be replaced when you run them.
+>
+  % / $file : Current File
+  # / $altFile : Alternate File
+  $dir : Current Working Directory
+  $filePath : Path to Current File
+  $fileBase : Basename of File (no extension)
+<
+
+================================================================================
+Usage                                                         *toggle_jaq.Usage*
 
 Set your keymaps for example
 >
@@ -18,6 +30,9 @@ Specify command to run and filetype to set in command line or in your config
 >
   :lua vim.g.toggle_jaq = {cmd = "lua %"}
 <
+Command can also be set to {cmd = 'internal', args = { -- some arguments see *toggle_jaq.variable* }}
+If no `args` is `nil`, `%` (current file) will be used.
+then instead of running terminal, 'luafile' will be used and its output will be showed in a a buffer.
 
 Your cmds can be set in various scopes. In sppecific buffer ('vim.b'), or globally ('vim.g') context.
 Buffer variable will be checked first, then global and last 'filetype' subtable from the configuration
@@ -54,7 +69,7 @@ There are following nvim commands
 :JaqPrint         - Prints a table of what filetype would be set and command would be run if you tried running terminal in the current buffer
 
 ================================================================================
-                                                             *toggle_jaq.Config*
+Config                                                       *toggle_jaq.Config*
 
 Can be setup with |toggle_jaq.setup|
 
@@ -88,6 +103,7 @@ Config                                                *toggle_jaq.Config.Config*
         {auto_resize}           (boolean)                Should 'wincmd =' be called after creating the window
         {dynamic_size}          (DynamicSizeConfig|nil)  see |DynamicSizeConfig|, this option will cause to ignore 'size'
         {highlight_background}  (string|nil)             Highlight for the terminal background
+        {create_commands}       (boolean)
 
 
 DynamicSizeConfig                          *toggle_jaq.Config.DynamicSizeConfig*
