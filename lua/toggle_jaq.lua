@@ -158,12 +158,25 @@ local function transform_cmd(cmd)
   return cmd
 end
 
+local function scroll_to_bottom()
+  local info = vim.api.nvim_get_mode()
+  if info and (info.mode == "nt" or info.mode == "n") then
+    vim.api.nvim_cmd({ cmd = "normal", bang = true, args = { "G" } }, {})
+  end
+end
+
 local AUGROUP_NAME = "toggle_jaq"
 local GROUP = vim.api.nvim_create_augroup(AUGROUP_NAME, { clear = true })
 
-local function spawn_term(cmd)
+local function spawn_term(cmd, bufnr)
   vim.fn.termopen(cmd, {
     detach = 0,
+    on_stdout = function()
+      vim.api.nvim_buf_call(bufnr, scroll_to_bottom)
+    end,
+    on_stderr = function()
+      vim.api.nvim_buf_call(bufnr, scroll_to_bottom)
+    end,
   })
 end
 
@@ -363,7 +376,7 @@ function Buffer:new()
   else
     local cmd = transform_cmd(result.cmd)
     vim.api.nvim_buf_call(self.bufnr, function()
-      spawn_term(cmd)
+      spawn_term(cmd, self.bufnr)
     end)
 
     if result.ft ~= nil then
